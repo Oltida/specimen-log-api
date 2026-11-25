@@ -1,5 +1,6 @@
 
 import express from "express";
+import specimensRouter from "./routes/specimens.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,6 +13,7 @@ app.get("/", (req, res) => {
   res.json({
     message: "Specimen Log API is running"
   });
+app.use("/specimens", specimensRouter);
 });
 
 // Start server locally, but not on Vercel
