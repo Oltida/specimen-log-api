@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Oltida/specimen-log-api#readme",
   "dependencies": {
+    "@supabase/supabase-js": "^2.119.2",
     "express": "^5.3.0"
   },
   "devDependencies": {
