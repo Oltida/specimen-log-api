@@ -51,4 +51,29 @@ router.get("/", async (req, res) => {
   res.status(200).json(data);
 });
 
+// GET /specimens/:id
+router.get("/:id", async (req, res) => {
+  const id = Number(req.params.id);
+
+  // id has to be a whole number, otherwise it's a bad request
+  if (!Number.isSafeInteger(id) || id < 1) {
+    throw new HttpError(400, "id must be a positive whole number");
+  }
+
+  // maybeSingle gives back null (not an error) when no row matches
+  const { data, error } = await supabase
+    .from("specimens")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  if (!data) {
+    throw new HttpError(404, `No specimen with id ${id}`);
+  }
+
+  res.status(200).json(data);
+});
+
 export default router;
