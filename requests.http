@@ -1,4 +1,6 @@
-@baseUrl = http://localhost:3000
+@localUrl = http://localhost:3000
+@prodUrl = https://specimen-log-api.vercel.app/
+@baseUrl = {{prodUrl}}
 
 ### health check
 GET {{baseUrl}}/
@@ -45,7 +47,7 @@ Content-Type: application/json
 
 
 ### update a specimen (should be 200)
-PUT {{baseUrl}}/specimens/5
+PUT {{baseUrl}}/specimens/6
 Content-Type: application/json
 
 {
@@ -58,7 +60,7 @@ Content-Type: application/json
 }
 
 ### update with a bad body (should be 400)
-PUT {{baseUrl}}/specimens/5
+PUT {{baseUrl}}/specimens/6
 Content-Type: application/json
 
 {
@@ -76,7 +78,7 @@ Content-Type: application/json
 
 
 ### delete a specimen (should be 204)
-DELETE {{baseUrl}}/specimens/5
+DELETE {{baseUrl}}/specimens/6
 
 ### delete one that doesn't exist (should be 404)
 DELETE {{baseUrl}}/specimens/9999
