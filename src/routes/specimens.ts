@@ -100,4 +100,23 @@ router.put("/:id", async (req, res) => {
   res.status(200).json(data);
 });
 
+// DELETE /specimens/:id
+router.delete("/:id", async (req, res) => {
+  const id = parseId(req.params.id);
+
+  const { data, error } = await supabase
+    .from("specimens")
+    .delete()
+    .eq("id", id)
+    .select();
+
+  if (error) throw error;
+
+  if (data.length === 0) {
+    throw new HttpError(404, `No specimen with id ${id}`);
+  }
+
+  res.status(204).send();
+});
+
 export default router;
