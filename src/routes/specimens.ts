@@ -3,6 +3,7 @@ import { Router } from "express";
 import supabase from "../supabase.js";
 import { Constants } from "../types/database.types.js";
 import type { Database } from "../types/database.types.js";
+import { HttpError } from "../errors.js";
 
 type Rarity = Database["public"]["Enums"]["specimen_rarity"];
 type Category = Database["public"]["Enums"]["specimen_category"];
@@ -23,16 +24,14 @@ router.get("/", async (req, res) => {
 
   if (rarity !== undefined) {
     if (typeof rarity !== "string" || !rarities.includes(rarity as Rarity)) {
-      res.status(400).json({ error: `rarity must be one of: ${rarities.join(", ")}` });
-      return;
+      throw new HttpError(400, `rarity must be one of: ${rarities.join(", ")}`);
     }
     query = query.eq("rarity", rarity as Rarity);
   }
 
   if (category !== undefined) {
     if (typeof category !== "string" || !categories.includes(category as Category)) {
-      res.status(400).json({ error: `category must be one of: ${categories.join(", ")}` });
-      return;
+      throw new HttpError(400, `category must be one of: ${categories.join(", ")}`);
     }
     query = query.eq("category", category as Category);
   }
