@@ -2,6 +2,7 @@
 import express from "express";
 import specimensRouter from "./routes/specimens.js";
 import logger from "./middleware/logger.js";
+import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +19,13 @@ app.get("/", (req, res) => {
   });
 app.use("/specimens", specimensRouter);
 });
+// if nothing above matched, it's a 404 (json, not html)
+app.use((req, res) => {
+  res.status(404).json({ error: `Route not found: ${req.method} ${req.originalUrl}` });
+});
+
+// error handler goes last, after all the routes
+app.use(errorHandler);
 
 // Start server locally, but not on Vercel
 if (!process.env.VERCEL) {
