@@ -1,10 +1,13 @@
 
 import express from "express";
 import specimensRouter from "./routes/specimens.js";
+import logger from "./middleware/logger.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// logger goes first so it sees every request
+app.use(logger);
 // Allows Express to read JSON request bodies
 app.use(express.json());
 
