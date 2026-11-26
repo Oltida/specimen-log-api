@@ -73,3 +73,10 @@ Content-Type: application/json
   "species_name": "Ghost",
   "category": "plant"
 }
+
+
+### delete a specimen (should be 204)
+DELETE {{baseUrl}}/specimens/5
+
+### delete one that doesn't exist (should be 404)
+DELETE {{baseUrl}}/specimens/9999
