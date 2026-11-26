@@ -5,6 +5,7 @@ import { Constants } from "../types/database.types.js";
 import type { Database } from "../types/database.types.js";
 import { HttpError } from "../errors.js";
 import parseId from "../parseId.js";
+import validateSpecimen from "../validateSpecimen.js";
 
 type Rarity = Database["public"]["Enums"]["specimen_rarity"];
 type Category = Database["public"]["Enums"]["specimen_category"];
@@ -17,7 +18,6 @@ const router = Router();
 router.get("/", async (req, res) => {
   const { rarity, category, sort } = req.query;
 
-  // start with a plain select of everything, then add filters if they sent them
   let query = supabase.from("specimens").select("*");
 
   if (rarity !== undefined) {
@@ -63,6 +63,21 @@ router.get("/:id", async (req, res) => {
   }
 
   res.status(200).json(data);
+});
+
+// POST /specimens
+router.post("/", async (req, res) => {
+  const specimen = validateSpecimen(req.body);
+
+  const { data, error } = await supabase
+    .from("specimens")
+    .insert(specimen)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  res.status(201).json(data);
 });
 
 export default router;
