@@ -42,3 +42,34 @@ Content-Type: application/json
   "species_name": "",
   "category": "mineral"
 }
+
+
+### update a specimen (should be 200)
+PUT {{baseUrl}}/specimens/5
+Content-Type: application/json
+
+{
+  "species_name": "Blue jay",
+  "category": "bird",
+  "habitat": "oak forest",
+  "rarity": "uncommon",
+  "date_found": "2026-10-12",
+  "notes": "very loud, seen twice now"
+}
+
+### update with a bad body (should be 400)
+PUT {{baseUrl}}/specimens/5
+Content-Type: application/json
+
+{
+  "category": "bird"
+}
+
+### update one that doesn't exist (should be 404)
+PUT {{baseUrl}}/specimens/9999
+Content-Type: application/json
+
+{
+  "species_name": "Ghost",
+  "category": "plant"
+}
