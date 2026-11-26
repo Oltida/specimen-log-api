@@ -4,18 +4,16 @@ import supabase from "../supabase.js";
 import { Constants } from "../types/database.types.js";
 import type { Database } from "../types/database.types.js";
 import { HttpError } from "../errors.js";
+import parseId from "../parseId.js";
 
 type Rarity = Database["public"]["Enums"]["specimen_rarity"];
 type Category = Database["public"]["Enums"]["specimen_category"];
 
-// the allowed values come straight from the generated types
 const rarities = Constants.public.Enums.specimen_rarity;
 const categories = Constants.public.Enums.specimen_category;
 
 const router = Router();
 
-// GET /specimens
-// optional query params: ?rarity=rare  ?category=bird  ?sort=date_found
 router.get("/", async (req, res) => {
   const { rarity, category, sort } = req.query;
 
@@ -36,7 +34,6 @@ router.get("/", async (req, res) => {
     query = query.eq("category", category as Category);
   }
 
-  // newest finds first if they ask for it, otherwise just go by id
   if (sort === "date_found") {
     query = query.order("date_found", { ascending: false });
   } else {
@@ -45,22 +42,14 @@ router.get("/", async (req, res) => {
 
   const { data, error } = await query;
 
-  // express 5 catches errors thrown in async routes and sends them to the error handler
   if (error) throw error;
 
   res.status(200).json(data);
 });
 
-// GET /specimens/:id
 router.get("/:id", async (req, res) => {
-  const id = Number(req.params.id);
+  const id = parseId(req.params.id);
 
-  // id has to be a whole number, otherwise it's a bad request
-  if (!Number.isSafeInteger(id) || id < 1) {
-    throw new HttpError(400, "id must be a positive whole number");
-  }
-
-  // maybeSingle gives back null (not an error) when no row matches
   const { data, error } = await supabase
     .from("specimens")
     .select("*")
