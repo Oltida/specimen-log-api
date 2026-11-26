@@ -1,0 +1,44 @@
+@baseUrl = http://localhost:3000
+
+### health check
+GET {{baseUrl}}/
+
+### get all specimens
+GET {{baseUrl}}/specimens
+
+### get all, only rare ones
+GET {{baseUrl}}/specimens?rarity=rare
+
+### get all, newest finds first
+GET {{baseUrl}}/specimens?sort=date_found
+
+### get all, bad rarity (should be 400)
+GET {{baseUrl}}/specimens?rarity=mythic
+
+### get one
+GET {{baseUrl}}/specimens/1
+
+### get one that doesn't exist (should be 404)
+GET {{baseUrl}}/specimens/9999
+
+### create a specimen (should be 201)
+POST {{baseUrl}}/specimens
+Content-Type: application/json
+
+{
+  "species_name": "Blue jay",
+  "category": "bird",
+  "habitat": "oak forest",
+  "rarity": "common",
+  "date_found": "2026-10-12",
+  "notes": "very loud"
+}
+
+### create with a bad body (should be 400)
+POST {{baseUrl}}/specimens
+Content-Type: application/json
+
+{
+  "species_name": "",
+  "category": "mineral"
+}
