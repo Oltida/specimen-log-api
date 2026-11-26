@@ -80,4 +80,24 @@ router.post("/", async (req, res) => {
   res.status(201).json(data);
 });
 
+router.put("/:id", async (req, res) => {
+  const id = parseId(req.params.id);
+  const specimen = validateSpecimen(req.body);
+
+  const { data, error } = await supabase
+    .from("specimens")
+    .update(specimen)
+    .eq("id", id)
+    .select()
+    .maybeSingle();
+
+  if (error) throw error;
+
+  if (!data) {
+    throw new HttpError(404, `No specimen with id ${id}`);
+  }
+
+  res.status(200).json(data);
+});
+
 export default router;
